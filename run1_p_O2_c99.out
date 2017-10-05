@@ -1,0 +1,14 @@
+Running on host node31-030
+Time is Thu Oct 5 13:56:58 BST 2017
+Directory is /panfs/panasas01/emat/ja17618/intro-hpc-jacobi-master
+PBS job ID is 6184735.master.cm.cluster
+------------------------------------
+Matrix size:            2000x2000
+Maximum iterations:     20000
+Convergence threshold:  0.000100
+------------------------------------
+Solution error = 0.099977
+Iterations     = 5479
+Total runtime  = 53.796470 seconds
+Solver runtime = 53.716939 seconds
+------------------------------------
