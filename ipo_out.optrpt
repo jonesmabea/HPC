@@ -1,0 +1,25 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Begin optimization report for: main(int, char **)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at jacobi.c(132,3)
+   remark #25460: No loop optimizations reported
+
+   LOOP BEGIN at jacobi.c(135,5)
+   <Peeled loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at jacobi.c(135,5)
+      remark #15300: LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at jacobi.c(135,5)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+===========================================================================

@@ -24,10 +24,10 @@
 #include <string.h>
 #include <sys/time.h>
 
-static int N;
-static int MAX_ITERATIONS;
+static unsigned int N;
+static unsigned int MAX_ITERATIONS;
 static int SEED;
-static double CONVERGENCE_THRESHOLD;
+static float CONVERGENCE_THRESHOLD;
 
 #define SEPARATOR "------------------------------------\n"
 
@@ -39,30 +39,33 @@ void parse_arguments(int argc, char *argv[]);
 
 // Run the Jacobi solver
 // Returns the number of iterations performed
-int run(double *A, double *b, double *x, double *xtmp)
+int run(float *A, float *b, float *x, float *xtmp)
 {
   
   register unsigned int row, col, itr;
-  double dot;
-  double diff;
-  double sqdiff;
-  double *ptrtmp;
+  register float dot;
+  register float diff;
+  register float sqdiff;
+  register float *ptrtmp;
 
   // Loop until converged or maximum iterations reached
   itr = 0;
   do
   {
+    sqdiff = 0.0;
     // Perfom Jacobi iteration
-    for (row = 0; row < N; row++)
+    for (row = N-1; row !=0; row--)
     {
       dot = 0.0;
-      for (col = 0; col < N; col++)
+      for (col = N-1; col != 0; col--)
       {
         if (row != col)
           dot += A[row + col*N] * x[col];
       }
+     
       xtmp[row] = (b[row] - dot) / A[row + row*N];
-	 
+      diff    = xtmp[row] - x[row];
+      sqdiff += diff*diff; 	 
     }
 
     // Swap pointers
@@ -71,12 +74,12 @@ int run(double *A, double *b, double *x, double *xtmp)
     xtmp   = ptrtmp;
 
     // Check for convergence
-    sqdiff = 0.0;
-    for (row = 0; row < N; row++)
-    {
-      diff    = xtmp[row] - x[row];
-      sqdiff += diff * diff;
-    }
+    //sqdiff = 0.0;
+    //for (row = N-1; row != 0; row--)
+    //{
+      //diff    = xtmp[row] - x[row];
+      //sqdiff += diff * diff;
+    //}
 
     itr++;
   } while ((itr < MAX_ITERATIONS) && (sqrt(sqdiff) > CONVERGENCE_THRESHOLD));
@@ -88,10 +91,12 @@ int main(int argc, char *argv[])
 {
   parse_arguments(argc, argv);
 
-  double *A    = malloc(N*N*sizeof(double));
-  double *b    = malloc(N*sizeof(double));
-  double *x    = malloc(N*sizeof(double));
-  double *xtmp = malloc(N*sizeof(double));
+
+
+  float *A    = malloc(N*N*sizeof(float));
+  float *b    = malloc(N*sizeof(float));
+  float *x    = malloc(N*sizeof(float));
+  float *xtmp = malloc(N*sizeof(float));
 
   printf(SEPARATOR);
   printf("Matrix size:            %dx%d\n", N, N);
@@ -119,14 +124,14 @@ int main(int argc, char *argv[])
 
   // Run Jacobi solver
   double solve_start = get_timestamp();
-  int itr = run(A, b, x, xtmp);
+  unsigned int itr = run(A, b, x, xtmp);
   double solve_end = get_timestamp();
 
   // Check error of final solution
-  double err = 0.0;
+  float err = 0.0;
   for (int row = 0; row < N; row++)
   {
-    double tmp = 0.0;
+    float tmp = 0.0;
     for (int col = 0; col < N; col++)
     {
       tmp += A[row + col*N] * x[col];
